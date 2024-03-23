@@ -15,7 +15,7 @@ class Tile {
   //Whether the tile was merged with another tile
   final bool merged;
 
-  late final String? imagePath;
+  String? imagePath;
 
   Tile(this.id, this.value, this.index, {this.nextIndex, this.merged = false}) {
     switch (value) {

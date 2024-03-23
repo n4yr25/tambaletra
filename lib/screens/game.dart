@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
@@ -55,22 +56,31 @@ class _GameState extends ConsumerState<Game>
     curve: Curves.easeInOut,
   );
 
-  bool hasSound = true;
-
-  void offSound() {
-    if (hasSound == true) {
-      hasSound = !hasSound;
-    } else {
-      hasSound = true;
-    }
-    setState(() {});
-  }
+  bool hasSound = false;
+  late AudioPlayer player = AudioPlayer();
 
   @override
   void initState() {
-    //Add an Observer for the Lifecycles of the App
     WidgetsBinding.instance.addObserver(this);
+    player = AudioPlayer();
+
+    player.setReleaseMode(ReleaseMode.loop);
+    offSound();
     super.initState();
+  }
+
+  void offSound() async {
+    if (hasSound == true) {
+      hasSound = !hasSound;
+      await player.pause();
+    } else {
+      hasSound = true;
+
+      await player.play(
+        AssetSource('audios/background_audio2.m4a'),
+      );
+    }
+    setState(() {});
   }
 
   @override
