@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:tambaletra/models/board_adapter.dart';
 import 'package:tambaletra/screens/game.dart';
+import 'package:tambaletra/screens/home.dart';
 
 void main() async {
   //Allow only portrait mode on Android & iOS
@@ -17,7 +18,7 @@ void main() async {
   runApp(const ProviderScope(
     child: MaterialApp(
       title: '2048',
-      home: Game(),
+      home: Home(),
     ),
   ));
 }
