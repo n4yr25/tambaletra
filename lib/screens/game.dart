@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
@@ -8,7 +7,9 @@ import 'package:tambaletra/components/empy_board.dart';
 import 'package:tambaletra/components/score_board.dart';
 import 'package:tambaletra/components/tile_board.dart';
 import 'package:tambaletra/const/colors.dart';
+import 'package:tambaletra/managers/audio.dart';
 import 'package:tambaletra/managers/board.dart';
+import 'package:tambaletra/models/audio_adapter.dart';
 
 class Game extends ConsumerStatefulWidget {
   const Game({super.key});
@@ -56,35 +57,17 @@ class _GameState extends ConsumerState<Game>
     curve: Curves.easeInOut,
   );
 
-  bool hasSound = false;
-  late AudioPlayer player = AudioPlayer();
-
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    player = AudioPlayer();
-
-    player.setReleaseMode(ReleaseMode.loop);
-    offSound();
     super.initState();
-  }
-
-  void offSound() async {
-    if (hasSound == true) {
-      hasSound = !hasSound;
-      await player.pause();
-    } else {
-      hasSound = true;
-
-      await player.play(
-        AssetSource('audios/background_audio2.m4a'),
-      );
-    }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final audioState = ref.watch(backgroundAudioProvider.notifier);
+    final isPlaying = ref.watch(isBackgroundAudioPlayingProvider);
+
     return RawKeyboardListener(
       autofocus: true,
       focusNode: FocusNode(),
@@ -110,7 +93,11 @@ class _GameState extends ConsumerState<Game>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: offSound,
+                  onTap: () {
+                    final notifier = ref.read(backgroundAudioProvider.notifier);
+                    notifier.toggleBackgroundAudio();
+                    setState(() {});
+                  },
                   child: Container(
                     alignment: Alignment.center,
                     width: 40,
@@ -123,7 +110,7 @@ class _GameState extends ConsumerState<Game>
                       ),
                     ),
                     child: Icon(
-                      hasSound
+                      isPlaying
                           ? Icons.music_note_rounded
                           : Icons.music_off_rounded,
                       color: Colors.white,
