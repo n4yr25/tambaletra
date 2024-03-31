@@ -15,7 +15,7 @@ class SettingsDialog extends ConsumerWidget {
       contentPadding: EdgeInsets.all(1),
       content: Container(
         width: MediaQuery.of(context).size.width * .75,
-        height: 350,
+        height: 400,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
           border: Border.all(
@@ -58,6 +58,17 @@ class SettingsDialog extends ConsumerWidget {
               decoration: InputDecoration(
                 hintText: '\"Player Name\"',
                 prefixIcon: Icon(Icons.person),
+                suffixIcon: TextButton(
+                  onPressed: () {
+                    print("tap");
+                  },
+                  child: Text(
+                    "Save",
+                    style: TextStyle(
+                      color: Colors.grey.shade900,
+                    ),
+                  ),
+                ),
               ),
               maxLength: 12,
             ),
@@ -67,9 +78,9 @@ class SettingsDialog extends ConsumerWidget {
             buildAudioSetting(
               context,
               label: 'Music',
-              icon: audioState == AudioState.playing
-                  ? Icons.music_note_rounded
-                  : Icons.music_off_rounded,
+              icon: audioState != AudioState.playing
+                  ? Icons.music_off_rounded
+                  : Icons.music_note_rounded,
               onTap: () {
                 final notifier = ref.read(backgroundAudioProvider.notifier);
                 notifier.toggleBackgroundAudio();
