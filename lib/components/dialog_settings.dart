@@ -9,13 +9,18 @@ class SettingsDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final audioState = ref.watch(backgroundAudioProvider);
+    bool soundfx = true;
+
+    void toggleSoundfx() {
+      soundfx = !soundfx;
+    }
 
     return AlertDialog(
       backgroundColor: Colors.white,
       contentPadding: EdgeInsets.all(1),
       content: Container(
         width: MediaQuery.of(context).size.width * .75,
-        height: 400,
+        height: 300,
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
         decoration: BoxDecoration(
           border: Border.all(
@@ -50,27 +55,6 @@ class SettingsDialog extends ConsumerWidget {
             ),
             Divider(
               thickness: 2,
-            ),
-            TextField(
-              style: TextStyle(
-                fontSize: 20,
-              ),
-              decoration: InputDecoration(
-                hintText: '\"Player Name\"',
-                prefixIcon: Icon(Icons.person),
-                suffixIcon: TextButton(
-                  onPressed: () {
-                    print("tap");
-                  },
-                  child: Text(
-                    "Save",
-                    style: TextStyle(
-                      color: Colors.grey.shade900,
-                    ),
-                  ),
-                ),
-              ),
-              maxLength: 12,
             ),
             SizedBox(
               height: 15,
