@@ -12,6 +12,12 @@ class ScoreBoard extends ConsumerWidget {
     final score = ref.watch(boardManager.select((board) => board.score));
     final best = ref.watch(boardManager.select((board) => board.best));
 
+    Future.microtask(() {
+      if (score > best) {
+        ref.read(boardManager.notifier).updateBestScore(score);
+      }
+    });
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -20,10 +26,10 @@ class ScoreBoard extends ConsumerWidget {
           width: 8.0,
         ),
         Score(
-            label: 'Best',
-            score: '$best',
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0)),
+          label: 'Best',
+          score: '$best',
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        ),
       ],
     );
   }

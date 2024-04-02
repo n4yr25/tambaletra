@@ -1,10 +1,27 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'package:tambaletra/components/dialog_settings.dart';
+import 'package:tambaletra/managers/audio.dart';
+import 'package:tambaletra/models/audio_adapter.dart';
 import 'package:tambaletra/screens/game.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  void initState() {
+    BackgroundAudioNotifier()
+        .playBackgroundAudio('audios/background_audio2.m4a');
+    isBackgroundAudioPlayingProvider;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +53,8 @@ class Home extends StatelessWidget {
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 80),
-              height: 50,
+              margin: EdgeInsets.only(top: 40),
+              height: 45,
               child: ElevatedButton(
                 onPressed: () => Navigator.of(context).push(
                   MaterialPageRoute(
@@ -46,11 +63,33 @@ class Home extends StatelessWidget {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,
-                  elevation: 4,
+                  shadowColor: Colors.yellow,
+                  elevation: 3,
                 ),
                 child: Text(
                   'Start Game',
-                  style: TextStyle(fontSize: 30, color: Colors.white),
+                  style: TextStyle(fontSize: 25, color: Colors.white),
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 25),
+              height: 45,
+              child: ElevatedButton(
+                onPressed: () async {
+                  return showDialog(
+                    context: context,
+                    builder: (context) => SettingsDialog(),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                  shadowColor: Colors.yellow,
+                  elevation: 3,
+                ),
+                child: Text(
+                  'Settings',
+                  style: TextStyle(fontSize: 25, color: Colors.white),
                 ),
               ),
             ),

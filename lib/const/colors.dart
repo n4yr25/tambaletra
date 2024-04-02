@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 const backgroundColor = Color.fromRGBO(89, 213, 224, 1);
 const textColor = Color.fromRGBO(51, 58, 115, 1);
 const textColorWhite = Color(0xfff9f6f2);
-const boardColor = Color.fromRGBO(56, 122, 223, .8);
+const boardColor = Color.fromRGBO(10, 62, 141, 0.8);
 const emptyTileColor = Color.fromRGBO(80, 196, 237, 1);
 const buttonColor = Color(0xff8f7a66);
 const scoreColor = Color.fromRGBO(56, 122, 223, .8);

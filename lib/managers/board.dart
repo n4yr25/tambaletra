@@ -36,9 +36,15 @@ class BoardManager extends StateNotifier<Board> {
   int maxScore() {
     return state.score > state.best ? state.score : state.best;
   }
+
+  void updateBestScore(int newScore) {
+    state = state.copyWith(best: newScore);
+    save(); // Save the updated best score
+  }
+
   // Create New Game state.
   Board _newGame() {
-    return Board.newGame( maxScore(), [random([])]);
+    return Board.newGame(maxScore(), [random([])]);
   }
 
   // Start New Game

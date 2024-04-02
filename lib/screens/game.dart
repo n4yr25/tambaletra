@@ -1,4 +1,3 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_swipe_detector/flutter_swipe_detector.dart';
@@ -8,7 +7,9 @@ import 'package:tambaletra/components/empy_board.dart';
 import 'package:tambaletra/components/score_board.dart';
 import 'package:tambaletra/components/tile_board.dart';
 import 'package:tambaletra/const/colors.dart';
+import 'package:tambaletra/managers/audio.dart';
 import 'package:tambaletra/managers/board.dart';
+import 'package:tambaletra/models/audio_adapter.dart';
 
 class Game extends ConsumerStatefulWidget {
   const Game({super.key});
@@ -56,35 +57,17 @@ class _GameState extends ConsumerState<Game>
     curve: Curves.easeInOut,
   );
 
-  bool hasSound = false;
-  late AudioPlayer player = AudioPlayer();
-
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
-    player = AudioPlayer();
-
-    player.setReleaseMode(ReleaseMode.loop);
-    offSound();
     super.initState();
-  }
-
-  void offSound() async {
-    if (hasSound == true) {
-      hasSound = !hasSound;
-      await player.pause();
-    } else {
-      hasSound = true;
-
-      await player.play(
-        AssetSource('audios/background_audio2.m4a'),
-      );
-    }
-    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
+    final audioState = ref.watch(backgroundAudioProvider.notifier);
+    final isPlaying = ref.watch(isBackgroundAudioPlayingProvider);
+
     return RawKeyboardListener(
       autofocus: true,
       focusNode: FocusNode(),
@@ -105,12 +88,26 @@ class _GameState extends ConsumerState<Game>
           body: Container(
             width: MediaQuery.of(context).size.width,
             padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(
+                  'assets/images/background_game.GIF',
+                ),
+                colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(.3), BlendMode.darken),
+                fit: BoxFit.cover,
+              ),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: offSound,
+                  onTap: () {
+                    final notifier = ref.read(backgroundAudioProvider.notifier);
+                    notifier.toggleBackgroundAudio();
+                    setState(() {});
+                  },
                   child: Container(
                     alignment: Alignment.center,
                     width: 40,
@@ -123,9 +120,9 @@ class _GameState extends ConsumerState<Game>
                       ),
                     ),
                     child: Icon(
-                      hasSound
-                          ? Icons.music_note_rounded
-                          : Icons.music_off_rounded,
+                      !isPlaying
+                          ? Icons.music_off_rounded
+                          : Icons.music_note_rounded,
                       color: Colors.white,
                       size: 30,
                     ),
@@ -138,19 +135,17 @@ class _GameState extends ConsumerState<Game>
                     children: [
                       Column(
                         children: [
-                          const Text(
-                            'Alibata',
-                            style: TextStyle(
-                                color: textColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 52.0),
+                          Container(
+                            height: 80,
+                            child: Image.asset(
+                                'assets/images/tambaletra_logo.png'),
                           ),
                           const Text(
-                            'MADjong',
+                            'Tambaletra',
                             style: TextStyle(
                                 color: textColor,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 25),
+                                fontSize: 30.0),
                           ),
                         ],
                       ),
@@ -200,7 +195,27 @@ class _GameState extends ConsumerState<Game>
                           scaleAnimation: _scaleAnimation)
                     ],
                   ),
-                )
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      "Exit",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
